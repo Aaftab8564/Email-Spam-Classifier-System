@@ -21,17 +21,20 @@ if "message" not in st.session_state:
 if "clear_clicked" not in st.session_state:
     st.session_state.clear_clicked = False
 
-# --- Sidebar: Sample text dropdown ---
+
 with st.sidebar:
     st.markdown("### 🧪 Try Sample Messages")
     selected_sample = st.selectbox("Choose a sample text to test:", [""] + sample_texts)
 
-    # If user selects a sample message, update session_state and rerun
-    if selected_sample and selected_sample != st.session_state.message:
-        st.session_state.message = selected_sample
-        st.rerun()
+    if selected_sample and selected_sample != st.session_state.last_selected_sample:
+        if not st.session_state.clear_clicked:
+            st.session_state.message = selected_sample
+            st.session_state.last_selected_sample = selected_sample
+            st.rerun()
+if "last_selected_sample" not in st.session_state:
+    st.session_state.last_selected_sample = ""
 
-# --- Handle Clear Button ---
+
 if st.session_state.clear_clicked:
     st.session_state.message = ""
     st.session_state.clear_clicked = False
